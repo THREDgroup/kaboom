@@ -12,7 +12,6 @@ from kaboom.params import Params
 from kaboom.CarDesigner import carTeamWorkProcess
 
 
-
 # # A 1.1
 # Test team performance of a homogeneous mid-range team 
 #for different pair-wise communication rates 
@@ -59,6 +58,10 @@ def run():
     # plt.savefig(directory+"/"+name+".png",dpi=300)
 
 
+    return allTeamObjects, pComms,p
+
+def showResults(allTeamObjects, pComms,p):
+
     allScores = np.array([t.getBestScore() for t in allTeamObjects])*-1
     nS = [t.nMeetings for t in allTeamObjects]
     plt.scatter(nS,allScores, c=[.9,.9,.9])
@@ -85,10 +88,9 @@ def run():
     m.plotCategoricalMeans(pC,perf)
     plt.xlabel('prob of communication (c)')
     plt.ylabel('performance')
-    # plt.savefig(domain+'/vsPcomm.pdf')
+#    plt.savefig('./pcomm.pdf')
     plt.show()
 
     #alternatively, plot performance vs the actual number of pairwise interactions
-    plt.scatter(nMeetings, perf)
-    #plt.savefig(domain+'/vsNmeetings.pdf')
-    return allTeamObjects
+#    plt.scatter(nMeetings, perf)
+#    plt.savefig('./pcomm.pdf')

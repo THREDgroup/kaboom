@@ -60,6 +60,12 @@ print ( team.nMeetings )
 #run simulations in parallel with multiprocessing
 import multiprocessing
 import itertools
+from kaboom.kaboom import teamWorkProcess
+from kaboom.params import Params
+
+p = Params()
+p.steps = 10
+p.reps  = 4
 
 allTeamObjects = []
 if __name__ == '__main__':
@@ -67,8 +73,11 @@ if __name__ == '__main__':
       allTeams = myPool.starmap(teamWorkProcess, zip(range(p.reps), itertools.repeat(p) ) )
       for team in allTeams:
           allTeamObjects.append(team)
-      pool.close()
-      pool.join()
+      myPool.close()
+      myPool.join()
+
+print("team scores: ")
+print([t.getBestScore() for t in allTeamObjects])
 
 
 #now create your own experiment, varying a parameter and checking the performance

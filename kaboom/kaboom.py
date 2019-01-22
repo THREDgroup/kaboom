@@ -13,9 +13,7 @@ from kaboom.params import Params
 from kaboom import kaiStyle as kai
 from kaboom.agent import Steinway
 from kaboom.team import Team
-#from kaboom.CarDesigner import CarDesigner
 
-#from kaboom.CarDesigner import CarDesigner
 
 #our virtual population of KAI scores
 kaiPopulation = kai.makeKAI(100000)

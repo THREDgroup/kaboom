@@ -3,7 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import os
 
-from kaboom import helperFunction as h
+from kaboom import helperFunctions as h
+
 #import helperFunctions as h
 
 kaboomDir = os.path.dirname(__file__)

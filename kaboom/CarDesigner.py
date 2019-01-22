@@ -8,7 +8,6 @@ from kaboom.kaboom import teamWorkSharing
 from kaboom import kaiStyle as kai
 
 
-
 from kaboom import modelFunctions as m
 
 class CarDesigner(Agent):
