@@ -1,0 +1,57 @@
+,name,variable,team,kind,minV,maxV,used
+0,rear wing height,hrw,rw,1,0.025,0.7,1
+1,rear wing length,lrw,rw,1,0.05,0.25,1
+2,rear wing width,wrw,rw,1,300,r_track-2*rear_wheel_r,1
+3,rear wing angle of attack,arw,rw,1,0,0.7853981634,1
+5,rear wing y position,yrw,rw,1,.500 + (h_rw)/2,1.200 -  (h_rw)/2,1
+6,rear wing density,qrw,rw,2,,,1
+7,front wing height,hfw,fw,1,0.025,0.2,1
+8,front wing length,lfw,fw,1,0.05,.700-a,1
+9,front wing width,wfw,fw,1,0.3,f_track,1
+10,front wing angle of attack,afw,fw,1,0,0.7853981634,1
+12,front wing y position,yfw,fw,1,x + (h_fw)/2,.250 - (h_fw)/2,1
+13,front wing density,qfw,fw,2,,,1
+14,side wings height,hsw,sw,1,0.025,0.2,1
+15,side wings length,lsw,sw,1,0.05,0.55,1
+16,side wings width,wsw,sw,1,0.05,0.4,1
+17,side wings angle of attack,asw,sw,1,0,0.7853981633974483,1
+19,side wing y position,ysw,sw,1,x + (h_sw)/2,.250 - (h_sw)/2,1
+20,side wing density,qsw,sw,2,,,1
+21,rear tire pressure(bar),Prt,rt,1,0.758,1.03,1
+23,rear tire radius,rrt,rt,3,,,1
+24,rear tire mass,mrt,rrt,-3,,,1
+25,front tire pressure (bar),Pft,ft,1,0.758,1.03,1
+27,front tire radius,rft,ft,3,,,1
+28,front tire mass,mft,rft,-3,,,1
+30,engine y position,ye,e,1,x + (engine_height)/2,.500 - (engine_height)/2,1
+31,engine power,Phi_e,e,4,,,1
+32,engine length,le,Phi_e,-4,,,1
+33,engine height,he,Phi_e,-4,,,1
+34,engine torque,T_e,Phi_e,-4,,,1
+35,engine mass,me,Phi_e,-4,,,1
+36,cabin height,hc,c,1,0.5,1.200-x,1
+37,cabin length,lc,c,1,1.525,3,1
+38,cabin width,wc,c,1,0.5,2,1
+39,cabin thickness,tc,c,1,0.0001,0.01,1
+41,cabin y position,yc,c,1,x + (h_c)/2,1200 -  (h_c)/2,1
+42,cabin density,qc,c,2,,,1
+43,impact attenuator height,hia,ia,1,0.1,0.5,1
+44,impact attenuator length,lia,ia,1,0.2,.700 - l_fr,1
+45,impact attenuator width,wia,ia,1,0.2,0.5,1
+47,impact attenuator y position,yia,ia,1,x + (h_ia)/2,1.200 -  (h_ia)/2,1
+48,impact attenuator density,qia,ia,2,,,1
+49,impact attenuator modulus,Eia,qia,-2,,,1
+52,brake density,qbrk,rbrk,-5,,,1
+53,brake length,lbrk,rbrk,-5,,,1
+54,brake height,hbrk,rbrk,-5,,,1
+55,brake width,wbrk,rbrk,-5,,,1
+56,brake thickness,tbrk,rbrk,-5,,,1
+57,brake radius,rbrk,brk,5,,,1
+59,rear suspension y position,yrsp,rsp,1,r_rt,r_rt * 2,1
+60,rear suspension spring constant,krsp,rsp,6,,,1
+61,rear suspension damping coefficient,crsp,krsp,-6,,,1
+62,rear suspension mass,mrsp,krsp,-6,,,1
+64,front suspension y position,yfsp,fsp,1,r_ft,r_ft * 2,1
+65,front suspension spring constant,kfsp,fsp,6,,,1
+66,front suspension damping coefficient,cfsp,kfsp,-6,,,1
+67,front suspension mass,mfsp,kfsp,-6,,,1

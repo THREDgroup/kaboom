@@ -1,0 +1,10 @@
+import kaboom.test.i_optimalCommRate
+import kaboom.test.ii_comm_v_style
+import kaboom.test.iii_teamMeetings
+import kaboom.test.iv_specialization_organic
+import kaboom.test.ix_composition_structure
+import kaboom.test.v_structure_style
+import kaboom.test.vi_problem_matrix
+import kaboom.test.vii_diverseTeams_problemSets
+import kaboom.test.viii_specialization_composition
+import kaboom.test.x_specialization_communication

@@ -1,0 +1,12 @@
+Teams,Continuous,Discrete
+Rear wing (rw),"hrw, lrw, wrw, arw, xrw, yrw",qrw
+Front wing (fw),"hfw, lfw, wfw, afw, xfw, yfw",qfw
+Side wings (sw),"hsw, lsw, wsw, asw, xsw, ysw",qsw
+Rear tires (rt),"Prt, xrt","rrt, mrt"
+Front tires (ft),"Pft, xft","rft, mft"
+Engine (e),"xe, ye","Ue, le, he, Sigma_e, me"
+Cabin (c),"hc, lc, wc, tc, xc, yc",qc
+Impact attenuator (ia),"hia, lia, wia, xia, yia","qia, Eia"
+Brake system (brk),"xbrk, ybrk","qbrk, lbrk, hbrk, wbrk, tbrk, rbrk"
+Rear suspension (rsp),"xrsp, yrsp","krsp, crsp, mrsp"
+Front suspension (fsp),"xfsp, yfsp","kfsp, cfsp, msp"
