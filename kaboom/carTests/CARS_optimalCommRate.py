@@ -30,16 +30,15 @@ def run():
     p.nDims = 56
     p.agentTeams = m.specializedTeams(p.nAgents,p.nTeams)
     p.teamDims = m.teamDimensions(p.nDims,p.nTeams)
-    p.reps = 4
+    p.reps = 16
     p.steps = 500
 
     pComms = np.linspace(0,1,6)
 
-
     allTeamObjects = []
     for pComm in pComms:
         if __name__ == '__main__' or 'kaboom.test.i_optimalCommRate':
-            pool = multiprocessing.Pool(processes = 4)
+            pool = multiprocessing.Pool(processes = 16)
             allTeams = pool.starmap(carTeamWorkProcess, zip(range(p.reps),itertools.repeat(p)))
             print('next. time: '+str(timer.time()-t0))
             for team in allTeams:
