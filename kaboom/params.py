@@ -65,5 +65,5 @@ class Params():
         s+= "sd temp: " +str(self.SD_TEMP)+ " \n"
         s+= "roughness: " +str(self.amplitude)+ " \n"
         s+= "ai score: "+ str(self.aiScore)+" \n"
-        s+= "ai range: "+ str(self.Range)+" \n"
+        # s+= "ai range: "+ str(self.Range)+" \n"
         return s

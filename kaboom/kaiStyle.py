@@ -16,7 +16,7 @@ path = my_path + "/KAI/KAI_DATA_2018_07_09.csv"
 kaiDF_DATASET = pd.read_csv(path) # "/Users/samlapp/SAE_ABM/kaboom/kaboom)
 kaiDF_DATASET.columns = ["KAI","SO","E","RG"]
 
-#
+
 def makeKAI(n=1,asDF=True):
     """
     create a normally distributed set of n KAI scores & subscores, using dataset
@@ -121,7 +121,7 @@ def calculateDecay(steps,T0=1.0,Tf=0.01):
     if T0<=Tf or T0<=0:
         return 0
     ratio = (Tf / float(T0) ) ** (1/steps)
-    return return ratio
+    return ratio
 
 def calculateAgentDecay(agent, steps):
     """

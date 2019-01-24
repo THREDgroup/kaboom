@@ -280,7 +280,7 @@ class Agent:
             self.score = candidateScore #its worse, but we go there anyways
             return True
         return False
-    
+
     #constrain solution [x] to the feasible space bounded by [p.spaceSize]
     #returns constrained solution
     def constrain(self,x,p):
@@ -307,14 +307,25 @@ class Steinway(Agent):
         Agent.__init__(self,p)
         self.myDims = np.ones(p.nDims)
         self.roughness=p.amplitude
-    def f(self): #evaluate objective function for this agent's current solution
+    def f(self):
+        """ evaluate objective function for this agent's current solution """
         return m.objectiveTune(self.r,self.roughness)
-    def fr(self,r): #evaluate objective function for a given solution r
+    def fr(self,r):
+        """ evaluate objective function for a given solution r """
         return m.objectiveTune(r,self.roughness)
-    
-    #constrain solution [x] to the feasible space bounded by [p.spaceSize]
-    #returns constrained solution
+
     def constrain(self,x,p):
+        """
+        constrain solution [x] to the feasible space bounded by [p.spaceSize]
+
+        Parameters:
+        ----------
+        p : Params object, contains current model Parameters
+
+        Returns:
+        -------
+        x : constrained solution
+        """
         for i in range(len(x)):
             x[i] = h.bounds(x[i],-1*p.spaceSize,1*p.spaceSize)
         return x

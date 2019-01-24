@@ -1,10 +1,10 @@
 """
 This module has functions for running the simulation with CarDesigner agents.
 """
+from kaboom import modelFunctions as m
 from kaboom.kaboom import teamWorkSharing
 from kaboom.params import Params
 from kaboom.CarDesigner import CarDesigner
-
 #wrapper for teamWorkSharing used for multiprocessing
 def carTeamWorkProcess(processID,p,agentConstructor = CarDesigner):
     team = teamWorkSharing(p,agentConstructor)
