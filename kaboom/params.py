@@ -3,6 +3,9 @@ The Params class defines an object to hold model parameters
 
 For example, Params.AVG_SPEED is the average step size of agents in the model.
 """
+
+from kaboom import modelFunctions as m
+
 class Params():
     """
     This class holds all global model parameters and is passed to various

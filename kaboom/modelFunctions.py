@@ -288,10 +288,10 @@ def considerSharedSoln(me,sharer,selfBias=0):
     as this much better than reality.
 
     """
-        candidateSolution = sharer.r
-        candidateScore = me.fr(candidateSolution)
-        myScore = me.score - selfBias #improve my score by selfBias
-        #Quality Bias Reduction would go here, if implemented
-        if(candidateScore<myScore):
-            if not pickWorseScore(candidateScore,myScore,me.temp):
-                me.moveTo(candidateSolution)
+    candidateSolution = sharer.r
+    candidateScore = me.fr(candidateSolution)
+    myScore = me.score - selfBias #improve my score by selfBias
+    #Quality Bias Reduction would go here, if implemented
+    if(candidateScore<myScore):
+        if not pickWorseScore(candidateScore,myScore,me.temp):
+            me.moveTo(candidateSolution)
