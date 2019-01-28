@@ -49,10 +49,11 @@ for pComm in pComms:
     else:
         print( __name__)
 # allTeams = [t for tl in allTeamObjects for t in tl]
+directory = saveResults(allTeamObjects,p,"testCommRate")
+
 print("time to complete: "+str(timer.time()-t0))
 
 # name="nShares_long_smallTeam"
-directory = saveResults(allTeamObjects,p,"testCommRate")
 # plt.savefig(directory+"/"+name+".pdf")
 # plt.savefig(directory+"/"+name+".png",dpi=300)
 

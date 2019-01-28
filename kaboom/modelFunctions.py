@@ -12,8 +12,6 @@ from matplotlib import pyplot as plt
 from scipy.stats import chi
 from kaboom import helperFunctions as h
 
-#d
-#
 def pickWorseScore(betterScore,worseScore,temperature):
     """
     Determine if an agent moves to a worse solution or keeps current solution.
@@ -131,8 +129,6 @@ def memoryWeightsPrimacy(n):
 #plt.plot(np.linspace(0,1,100),memoryWeightsPrimacy(100))
 # plt.savefig('./serialPosition.pdf')
 
-#
-#returns a vector of length [nAgents] with values [0:nTeams-1] mapping agents to teams
 def specializedTeams(nAgents,nTeams):
     """
     Assign [nAgents] agents to [nTeams] sub-teams.
@@ -205,13 +201,29 @@ def objectiveTune(x,a=.05,w=100):
 
 #### sharing solutions and pairwise communcation ####
 
-#when agents communicate, they attempt to share solutions with eachother
-#returns True if communication succeeds, else False
 def tryToShare(a1,a2,p):
+    """
+    Two agents perform pairwise communication (attept to share solutions).
+
+    The probability of successful communication depends on the cognitive gap
+    (differnce in KAI score). If communication succeeds, they share solutions
+    and decide whether to accept the other's solution. If it fails, they do
+    nothing this turn.
+
+    Parameters
+    ----------
+    a1, a2 : Agent objects, the two agents communicating
+    p : Params object, contains current model Parameters
+
+    Returns
+    -------
+    True if communication is successful, else False
+
+    """
     deltaAi = abs(a1.kai.KAI - a2.kai.KAI) #harder to communicate above 20, easy below 10
-#    deltaR = np.linalg.norm(a1.r - a2.r)
     successful =  tryComm(deltaAi,p)#deltaR)
-    if successful: #in share(), agents might adopt a better solution depending on their temperature
+    if successful:
+        #in share(), agents may adopt better solution depending on temp
         share(a1,a2,p.selfBias)
         return True
     return False
@@ -219,22 +231,67 @@ def tryToShare(a1,a2,p):
 #likelihood of communication success depends on cognitive gap [deltaAi]
 #returns True if communication succeeds, else False
 def tryComm(deltaAi,p):
+    """
+    Determine if pairwise communication succeeds or fails
+
+    Probability of success depends on the difference in 2 agents KAI scores
+
+    Parameters
+    ----------
+    deltaAi : the difference in the 2 agents' KAI scores
+    p : Params object, contains current model Parameters
+
+    Returns
+    -------
+    True if communication is successful, else False
+
+    """
     c = np.random.uniform(p.commBonus,p.commBonus+p.commRange) #increasing commBonus makes sharing easier
     return (deltaAi < c)
 
-#when sharing is successful, each agent considers the others' solution
-def share(a1,a2,selfBias=0): #each agent chooses whether to accept shared solution or not
+def share(a1,a2,selfBias=0):
+    """
+    Each agent chooses whether to accept shared solution or not
+
+    Parameters
+    ----------
+    a1, a2 : Agent objects, the two agents communicating
+    p : Params object, contains current model Parameters
+    selfBias : float, (default: 0) agents percieve their own solution quality
+    as this much better than reality.
+
+    Returns
+    -------
+    True
+
+    """
     copyOfA1 = h.cp(a1)
     considerSharedSoln(a1,a2,selfBias)
     considerSharedSoln(a2,copyOfA1,selfBias)
     return True
 
-#given another agent [sharer]'s solution, this agent [me] decides whether to accept or reject it
 def considerSharedSoln(me,sharer,selfBias=0):
+    """
+    Agent decides whether to accept or reject a shared solution
+
+    The agent evaluates the solution provided by another agent. If it percieves
+    the shared solution as better, it stochastically decides whether to
+    accept it with pickWorseScore(). If it accepts the shared solution,
+    it moves to that solution. Agents never accept a shared solution that they
+    percieve as worse than their current solution.
+
+    Parameters
+    ----------
+    me: Agent object, the agent considering a new solution
+    sharer: Agent object, the agent sharing a solution
+    selfBias : float, (default: 0) agents percieve their own solution quality
+    as this much better than reality.
+
+    """
         candidateSolution = sharer.r
         candidateScore = me.fr(candidateSolution)
-        myScore = me.score - selfBias #improve my score by selfBias (currently set to zero)
+        myScore = me.score - selfBias #improve my score by selfBias
         #Quality Bias Reduction would go here, if implemented
         if(candidateScore<myScore):
-            if not pickWorseScore(candidateScore,myScore,me.temp): #sometimes choose better, not always
-                me.moveTo(candidateSolution)  #(but never take a worse score from a teammate)
+            if not pickWorseScore(candidateScore,myScore,me.temp):
+                me.moveTo(candidateSolution)

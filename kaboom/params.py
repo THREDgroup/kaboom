@@ -1,8 +1,14 @@
-#class for model Parameters
-#a Param object stores model parameters and sets default values
-import kaboom.modelFunctions as m
+"""
+The Params class defines an object to hold model parameters
 
+For example, Params.AVG_SPEED is the average step size of agents in the model.
+"""
 class Params():
+    """
+    This class holds all global model parameters and is passed to various
+    functions. This avoids the use of global variables across the program and
+    allows parameter values to be changed or checked at any point.
+    """
     def __init__(self):
         #Objective Function Parameters
         self.amplitude = .025 #sinusoidal amplitude, alpha
@@ -25,11 +31,13 @@ class Params():
 
         #Communication Parameters
         self.pComm = 0.2 #probability of comm on each step (called c in paper)
-        self.meetingTimes = 50 #have one meeting every 50 iterations
-        self.TEAM_MEETING_COST = 1 #1 iteration (turn)
-        self.selfBias = 0 # self bias >0: agents percieve own solutions as better than they are
-        self.commBonus = 10 #increasing the communication bonus makes successful communication more likely
-        self.commRange = 180 #for modifying the slope of successful communication probability
+        self.meetingTimes = 50 #have one meeting every 50 iterations (turns)
+        self.TEAM_MEETING_COST = 1 #team meeting lasts 1 iteration (turn)
+        self.selfBias = 0 # if >0: agents percieve own solutions as better
+        #increasing communication bonus makes successful communication more likely
+        self.commBonus = 10
+        #for modifying the slope of successful communication probability
+        self.commRange = 180
 
         #Team parameters
         self.nAgents = 6
@@ -47,8 +55,8 @@ class Params():
         self.showViz = False #for visualizing simulation
         self.reps = 16 #experiment repetitions
 
-    #make a string (to save to a .txt file) listing Param object's parameters
     def makeParamString(self):
+        """ make a formatted string listing Param object's parameters """
         s= ""
         s+= "steps: "+ str(self.steps) + " \n"
         s+= "self-bias: " +str(self.selfBias)+ " \n"
