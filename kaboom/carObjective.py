@@ -1,3 +1,24 @@
+"""
+This module implements a contextualized design problem of designing a racecar.
+
+The racecar design problem is from Zurita et al [1]. It parameterizes the design
+of a racecar into a 56-variable problem, with variables separated into 11
+sub-design problems, for instance the motor or cabin design. The paper
+introduces an objective function which evaluates the expected performance of the
+car based on metrics such as accelleration and turning speed. To this end, 11
+sub objectives are defined that correspond to different aspects of performance.
+The weighted sum of these sub objectives gives the total value of the objective
+function (weights from Zurita [1] and uniform weights are implemented here.) See
+Zurita [1] for details on the design problem.
+
+
+[1] Zurita, N., Colby, M., Tumer, I., Hoyle, C., & Tumer, K. (2017).
+"Design of Complex Engineered Systems Using Multi-Agent Coordination."
+Journal of Computing and Information Science in Engineering, 18(October), 1–13.
+https://doi.org/10.1115/1.4038158
+
+"""
+
 import pandas as pd
 import numpy as np
 from matplotlib import pyplot as plt
@@ -5,12 +26,9 @@ import os
 
 from kaboom import helperFunctions as h
 
-#import helperFunctions as h
-
 kaboomDir = os.path.dirname(__file__)
-#print(kaboomDir)
 
-#FIRST TIME:
+#load the list of car parameters from a csv file
 carParamsDF = pd.read_csv(kaboomDir +"/SAE/paramDB.csv")
 carParamsDF.columns = ['paramID','name','variable','team','kind','minV','maxV','used']
 # carParamsDF.at[3,"maxV"] = np.pi/4
@@ -18,20 +36,17 @@ carParamsDF.columns = ['paramID','name','variable','team','kind','minV','maxV','
 carParamsDF.at[17,"maxV"] = np.pi /4
 carParamsDF.used = pd.to_numeric(carParamsDF.used)
 carParamsDF = carParamsDF.drop(columns=["paramID"],axis=1)
-#remove unused variables... print(len(carParamsDF))
+#remove unused variables...
 carParamsDF = carParamsDF.loc[carParamsDF.used > 0 ]
 carParamsDF.to_csv(kaboomDir +"/SAE/paramDBreduced.csv")
 carParamsDF = pd.read_csv(kaboomDir +"/SAE/paramDBreduced.csv")
-print(len(carParamsDF))
 carParamsDF = carParamsDF.drop(["used"],axis=1)
-carParamsDF.head()
 
-
-carParamsDF.loc[carParamsDF.variable == "asw"]
-
-#logical vector for car parameters with fixed min/max (TRUE), or min/max as f(car) (FALSE)
+#logical vector: (TRUE) if car parameter has fixed min/max values,
+# (FALSE) if min/max values are f(car)
 hasNumericBounds = [True if h.isNumber(row.minV) and h.isNumber(row.maxV) else False for i, row in carParamsDF.iterrows()]
 
+#tweak the original to jitter equivalent values
 # materialsDF = pd.read_csv("/Users/samlapp/Documents/THRED Lab/SAE/materials.csv")
 # materialsDF.q = [int(1 + np.random.uniform(0.98,1.02)*materialsDF.iloc[i]['q']) for i in range(len(materialsDF))]
 # materialsDF.to_csv("/Users/samlapp/Documents/THRED Lab/SAE/materialsTweaked.csv")
@@ -39,7 +54,6 @@ materialsDF = pd.read_csv(kaboomDir +"/SAE/materialsTweaked.csv")
 materialsDF.head()
 
 tiresDF = pd.read_csv(kaboomDir +"/SAE/tires.csv")
-tiresDF
 
 # motorsDF = pd.read_csv("/Users/samlapp/Documents/THRED Lab/SAE/motors.csv")
 # # first time: we want to make motors with the same power slightly different:
@@ -69,19 +83,28 @@ print("unique" if len(brakesDF)-len(np.unique(brakesDF['rbrk'])) == 0 else "not 
 brakesDF = brakesDF.drop(columns=[brakesDF.columns[0]])
 brakesDF.head()
 
+
 class CarParams:
+    """ A class to hold the parameters for car design
+
+    Some of the parameters take discrete values (Eg, choosing a material). These are mapped onto a continuous axis based on one property (eg, modululs of elasticity for materials or Power for engines). In the problem space, agents explore the continuous dimension. Then the discrete value for the final solution is chosen as the closest option to the continuous position.
+    """
     def __init__(self,v = carParamsDF):
+        """ initialize a CarParam object holding all variables of a Solution"""
         self.vars = v.variable
         self.team = v.team
         for i, row in v.iterrows():
             setattr(self, row.variable.strip(),-1)
+
+#example of creating a CarParams object and modifying values:
 car = CarParams()
 for v in car.vars:
     value = np.random.uniform()
     setattr(car,v,value)
-# check a value:
+# extracting a value:
 # carParamsDF.loc[carParamsDF.variable=="hrw"]["team"][0]
 
+# Make a dictionary of the sub-teams and their dimensions
 teams = np.unique(carParamsDF.team)
 teamDimensions = [[row.team == t for i, row in carParamsDF.iterrows()] for t in teams]
 teamDictionary = {}
@@ -89,10 +112,10 @@ for i in range(len(teams)):
     teamDictionary[teams[i]] = teamDimensions[i]
 paramList = np.array(carParamsDF.variable)
 
-#convert parameter vector to Parameter object
 pNames = carParamsDF.variable
 blankParameterObject = CarParams()
 def asCarParameters(carList):
+    """convert a parameter vector (list of float) to CarParameter object"""
     car = h.cp(blankParameterObject)
     for i in range(len(carList)):
         setattr(car,pNames[i],carList[i])
@@ -100,17 +123,16 @@ def asCarParameters(carList):
 
 numberParameters = len(carParamsDF)
 def asVector(car):
+    """convert a CarParameter object to a parameter vector (list of float)"""
     carList = np.zeros(numberParameters)
     for i in range(numberParameters):
         pName = pNames[i]
         carList[i] = getattr(car,pName)
     return carList
 
+### Objective Subfunctions
 
-
-# ## Objective Subfunctions
-
-# ### constants
+# constants
 #
 # The car’s top velocity vcar is 26.8 m/s (60 mph).
 #
@@ -123,15 +145,9 @@ def asVector(car):
 # The pressure applied to the brakes Pbrk is 1x10^7 Pa
 #
 
-# In[1027]:
-
-
-#scale parameters to go between unit cube (approximately) and SI units
+#store max values of each parameter
 paramMaxValues = []
-
-
-# In[1028]:
-
+#(later, scale parameters to go between unit cube (approximately) and SI units)
 
 v_car = 26.8 #m/s (60 mph)
 w_e = 3600 * 60 * 2 *np.pi #rpm  to radians/sec
@@ -141,163 +157,137 @@ P_brk = 10**7 #Pascals
 C_dc = 0.04 #drag coefficient of cabin
 gravity = 9.81 #m/s^2
 
-
-# In[1029]:
-
-
 #mass (minimize)
 def mrw(car):
+    """ Calculate mass of rear wing """
     return car.lrw * car.wrw *car.hrw * car.qrw
 def mfw(car):
+    """ calculate mass of front wing """
     return car.lfw * car.wfw *car.hfw * car.qfw
 def msw(car):
+    """ Calculate mass of side wing """
     return car.lsw * car.wsw *car.hsw * car.qsw
 def mia(car):
+    """ Calculate mass of impact attenuator """
     return car.lia * car.wia *car.hia * car.qia
 def mc(car):
+    """ Calculate mass of cabin """
     return 2*(car.hc*car.lc*car.tc + car.hc*car.wc*car.tc + car.lc*car.hc*car.tc)*car.qc
 def mbrk(car):
-    #CHRIS missing parameters: how is mbrk calculated? assuming lrw*rho
+    """ Calculate mass of breaks"""
     return car.lbrk * car.wbrk * car.hbrk * car.qbrk
-def mass(car): #total mass, minimize
+def mass(car):
+    """ Calculate total mass of car (want to minimize) """
     mass = mrw(car) + mfw(car) + 2 * msw(car) + 2*car.mrt + 2*car.mft + car.me + mc(car) + mia(car) + 4*mbrk(car) + 2*car.mrsp + 2*car.mfsp
     return mass
 
-
-# In[1030]:
-
-
-#center of gravity height, minimize
 def cGy(car):
+    """ Calculate center of gravity height (minimize)"""
     t1 =  (mrw(car)*car.yrw + mfw(car)*car.yfw+ car.me*car.ye + mc(car)*car.yc + mia(car)*car.yia) / mass(car)
     t2 = 2* (msw(car)*car.ysw + car.mrt*car.rrt + car.mft*car.rft + mbrk(car)*car.rft + car.mrsp*car.yrsp + car.mfsp*car.yfsp) / mass(car)
 
     return t1 + t2
 
-
-# In[1031]:
-
-
 #Drag (minimize) and downforce (maximize)
-def AR(w,alpha,l): #aspect ratio of a wing
+def AR(w,alpha,l):
+    """ Calculate aspect ratio of a wing """
     return w* np.cos(alpha) / l
 
-def C_lift(AR,alpha): #lift coefficient of a wing
+def C_lift(AR,alpha):
+    """ Calculate lift coefficient of a wing"""
     return 2*np.pi* (AR / (AR + 2)) * alpha
 
-def C_drag(C_lift, AR): #drag coefficient of wing
+def C_drag(C_lift, AR):
+    """ Calculate drag coefficient of wing"""
     return C_lift**2 / (np.pi * AR)
 
-def F_down_wing(w,h,l,alpha,rho_air,v_car): #total downward force of wing
+def F_down_wing(w,h,l,alpha,rho_air,v_car):
+    """ Calculate total downward force of wing"""
     wingAR = AR(w,alpha,l)
     C_l = C_lift(wingAR, alpha)
     return 0.5 * alpha * h * w * rho_air * (v_car**2) * C_l
 
-def F_drag_wing(w,h,l,alpha,rho_air,v_car): #total drag force on a wing
+def F_drag_wing(w,h,l,alpha,rho_air,v_car):
+    """ Calculate total drag force on a wing """
     wingAR = AR(w,alpha,l)
-#     print(wingAR)
     C_l = C_lift(wingAR, alpha)
-#     print(C_l)
     C_d = C_drag(C_l,wingAR)
-#     print(C_d)
     return F_drag(w,h,rho_air,v_car,C_d)
 
 def F_drag(w,h,rho_air,v_car,C_d):
+    """ Calculate drag force on a body """
     return 0.5*w*h*rho_air*v_car**2*C_d
 
-def F_drag_total(car): #total drag on vehicle
+def F_drag_total(car):
+    """ Calculate total drag on vehicle (minimize)"""
     cabinDrag = F_drag(car.wc,car.hc,rho_air,v_car,C_dc)
     rearWingDrag = F_drag_wing(car.wrw,car.hrw,car.lrw,car.arw,rho_air,v_car)
     frontWingDrag = F_drag_wing(car.wfw,car.hfw,car.lfw,car.afw,rho_air,v_car)
     sideWingDrag = F_drag_wing(car.wsw,car.hsw,car.lsw,car.asw,rho_air,v_car)
     return rearWingDrag + frontWingDrag + 2* sideWingDrag + cabinDrag
 
-def F_down_total(car): #total downforce
+def F_down_total(car):
+    """ Calculate total downforce (maximize)"""
     downForceRearWing = F_down_wing(car.wrw,car.hrw,car.lrw,car.arw,rho_air,v_car)
     downForceFrontWing = F_down_wing(car.wfw,car.hfw,car.lfw,car.afw,rho_air,v_car)
     downForceSideWing = F_down_wing(car.wsw,car.hsw,car.lsw,car.asw,rho_air,v_car)
     return downForceRearWing + downForceFrontWing + 2*downForceSideWing
 
-
-# In[1032]:
-
-
-#acceleration (maximize)
 def rollingResistance(car,tirePressure,v_car):
+    """ Calculate rolling resistance of a tire """
     C = .005 + 1/tirePressure * (.01 + .0095 * (v_car**2))
     return C * mass(car) * gravity
 
 def acceleration(car):
+    """ Calculate acceleration (maximize) """
     mTotal = mass(car)
     tirePressure = car.Prt #CHRIS should it be front or rear tire pressure?
     total_resistance = F_drag_total(car) + rollingResistance(car, tirePressure,v_car)
 
     w_wheels = v_car / car.rrt #rotational speed of rear tires
-
     efficiency = total_resistance * v_car / car.Phi_e
-
     torque = car.T_e
-
-    #converted units of w_e from rpm to rad/s !!!
+    #converted units of w_e from rpm to rad/s
     F_wheels = torque * efficiency * w_e /(car.rrt * w_wheels)
 
     return (F_wheels - total_resistance) / mTotal
-# acceleration(car)
 
 
-# In[1033]:
-
-
-#crash force (minimize)
 def crashForce(car):
+    """ Calculate crash force (minimize) """
     return np.sqrt(mass(car) * v_car**2 * car.wia * car.hia * car.Eia / (2*car.lia))
 
-
-# In[1034]:
-
-
-#impact attenuator volume (minimize)
 def iaVolume(car):
+    """ Calculate impact attenuator volume (minimize) """
     return car.lia*car.wia*car.hia
 
-
-# In[1035]:
-
-
-#corner velocity (maximize)
 y_suspension = 0.05 # m
 dydt_suspension = 0.025 #m/s
 def suspensionForce(k,c):
+    """ Calculate suspension force """
     return k*y_suspension + c*dydt_suspension
 
 def cornerVelocity(car):
+    """ Calculate corner velocity (maximize) """
     F_fsp = suspensionForce(car.kfsp,car.cfsp)
     F_rsp = suspensionForce(car.krsp,car.crsp)
     downforce = F_down_total(car)
     mTotal = mass(car)
 
-    #CHRIS again, rear tire pressure?
     C = rollingResistance(car,car.Prt,v_car)
     forces = downforce+mTotal*gravity-2*F_fsp-2*F_rsp
     if forces < 0:
         return 0
     return np.sqrt( forces * C * r_track / mTotal )
-# cornerVelocity(car)
 
 p = 0
-
-# In[1037]:
-
-
-#breaking distance (minimize)
 def breakingDistance(car):
+    """ Calculate breaking distance (minimize) """
     mTotal = mass(car)
     C = rollingResistance(car,car.Prt,v_car)
 
-    #CHRIS need c_brk break friction coef, and A_brk (rectangle or circle?)
-    #breaking torque
     A_brk = car.hbrk * car.wbrk
-    c_brk = .37 #?   most standard brake pads is usually in the range of 0.35 to 0.42
+    c_brk = .37 #standard brake pad is usually in the range of 0.35 to 0.42
     Tbrk = 2 * c_brk * P_brk * A_brk * car.rbrk
 
     #y forces:
@@ -306,54 +296,34 @@ def breakingDistance(car):
     Fy = mTotal*gravity + F_down_total(car) - 2 * F_rsp - 2*F_fsp
     if Fy<=0: Fy = 1E-10
 
-    #breaking accelleration
-    #CHRIS front and rear tire radius are same? (rrt and rft)
-    a_brk = Fy * C / mTotal + 4*Tbrk*C/(car.rrt*mTotal)
+    a_brk = Fy * C / mTotal + 4*Tbrk*C/(car.rrt*mTotal) #breaking accelleration
 
     #breaking distance
     return v_car**2 / (2*a_brk)
-# breakingDistance(car)
 
-
-# In[1038]:
-
-
-#suspension acceleration (minimize)
 def suspensionAcceleration(car):
+    """ Calculate suspension acceleration (minimize) """
     Ffsp = suspensionForce(car.kfsp,car.cfsp)
     Frsp = suspensionForce(car.krsp,car.crsp)
     mTotal = mass(car)
     Fd = F_down_total(car)
     return (2*Ffsp - 2*Frsp - mTotal*gravity - Fd)/mTotal
-# suspensionAcceleration(car)
 
-
-# In[1039]:
-
-
-#pitch moment (minimize)
 def pitchMoment(car):
+    """ Calculate pitch moment (minimize) """
     Ffsp = suspensionForce(car.kfsp,car.cfsp)
     Frsp = suspensionForce(car.krsp,car.crsp)
 
     downForceRearWing = F_down_wing(car.wrw,car.hrw,car.lrw,car.arw,rho_air,v_car)
     downForceFrontWing = F_down_wing(car.wfw,car.hfw,car.lfw,car.afw,rho_air,v_car)
     downForceSideWing = F_down_wing(car.wsw,car.hsw,car.lsw,car.asw,rho_air,v_car)
-    # assuming lcg is lc? and lf is ?
+    # assuming lcg is lc and lf is 0.5
     lcg = car.lc
     lf = 0.5
     return 2*Ffsp*lf + 2*Frsp*lf + downForceRearWing*(lcg - car.lrw) - downForceFrontWing*(lcg-car.lfw) - 2*downForceSideWing*(lcg-car.lsw)
-# pitchMoment(car)
-
-
-# ## Global Objective
-
-# In[1040]:
-
 
 #Global objective: linear sum of objective subfunctions
 #sub-objectives to maximize will be mirrored *-1 to become minimizing
-
 subObjectives = [mass,cGy,F_drag_total,F_down_total,acceleration,crashForce,iaVolume,cornerVelocity,breakingDistance,suspensionAcceleration,pitchMoment]
 alwaysMinimize = [1,1,1,-1,-1,1,1,-1,1,1,1] #1 for minimizing, -1 for maximizing
 weightsNull = np.ones(len(subObjectives)) / len(subObjectives)
@@ -361,7 +331,8 @@ weights1 = np.array([14,1,20,30,10,1,1,10,10,2,1])/100
 weights2 = np.array([25,1,15,20,15,1,1,15,5,1,1])/100
 weights3 = np.array([14,1,20,15,25,1,1,10,10,2,1])/100
 
-weightsCustom = np.array([14,1,20,30,11,1,1,10,10,2,0])/100 #pitch moment is zero bc incorrect eqn
+#pitch moment is zero bc incorrect eqn
+weightsCustom = np.array([14,1,20,30,11,1,1,10,10,2,0])/100
 
 def objectiveDetailedNonNormalized(car,weights):
     score = 0
@@ -377,6 +348,19 @@ subscoreMean = np.zeros(len(subObjectives))
 subscoreSd = np.ones(len(subObjectives))
 
 def objective(car,weights=weightsNull):
+    """
+    Compute the total objective function for the car's performance
+
+    The objective is framed as a minimization problem so lower scores are better.
+
+    Parameters:
+    ----------
+
+
+    Returns:
+    -------
+    score : float, total objective function score (minimization problem)
+    """
     score = 0
     for i in range(len(subObjectives)):
         obj = subObjectives[i]
@@ -645,18 +629,10 @@ def constrain(car,dimsToConstrain=np.ones(len(carParamsDF))):
 
 
 # ## create the scaling vector
-
-# In[1045]:
-
-
 carVmax = asCarParameters([1e15 for i in range(len(carParamsDF))])
 maxVals = constrain(carVmax)
-scalingVector = asVector(maxVals) #this acts as a scaling vector to map SI unit values to ~unit cube
-# carParamsDF.iloc[11]
-
-
-# In[1046]:
-
+scalingVector = asVector(maxVals) #this acts as a scaling vector to map SI unit
+# values to ~unit cube
 
 carVmin = asCarParameters([-1E10 for i in range(len(carParamsDF))])
 minVals = constrain(carVmin)
@@ -672,28 +648,10 @@ plt.plot(n,asVector(minVals)/scalingVector)
 
 
 mins = asVector(minVals)/scalingVector
-mins[28]
-
-
-# In[1048]:
-
-
-np.argmax(scalingVector)
-scalingVector[41]
-
-
-# In[1049]:
-
-
-carParamsDF.loc[28]
-
-
-# ## create realistic starting values
-
-# In[1050]:
 
 
 def startCarParams(returnParamObject=True):
+    """Create feasible starting values for a car design """
     nParams = len(carParamsDF)
     carV = np.random.uniform(0,1,nParams) * scalingVector
     car = constrain(asCarParameters(carV))
@@ -702,39 +660,24 @@ def startCarParams(returnParamObject=True):
 # objective(car,weightsCustom)
 
 def normalizedCarVector(car):
+    """Convert CarParams object to a normalized vector of floats"""
     carV = asVector(car)
     normalizedCarVector = carV / scalingVector
     return normalizedCarVector
 
 def normCarVector_to_car(normalizedCarVector):
+    """Convert normalized vector of floats to a CarParams object"""
     carV = normalizedCarVector * scalingVector
     car = asCarParameters(carV)
     return car
-# In[1051]:
-
-
-# car = startCarParams()
-# constrained = asVector(car)
-# # constrained/ scalingVector
-# for i, row in carParamsDF.iterrows():
-#     print(row[1] + " : \t"+str(constrained[i]))
-
 
 # ### run random possible start values through objectives to get distribution of outputs
-
-# In[1052]:
-
-
 # subscores = []
 # for i in range(3000):
 #     car = startCarParams()
 #     _,ss = objectiveDetailedNonNormalized(car,weightsNull)
 #     subscores.append(ss)
 # s = np.array(subscores)
-
-
-# In[463]:
-
 
 # x = s[:,7]
 # s[:,7 ] = [3000 if isNaN(x[i]) else x[i] for i in range(len(x)) ]
@@ -745,9 +688,6 @@ def normCarVector_to_car(normalizedCarVector):
 # ### capture the mean and standard deviations of subscores
 # so that we can normalize them assuming Normal dist.
 # Now, the objective function will fairly weight sub-objectives using custom weights
-
-# In[1053]:
-
 
 # # FIRST TIME, need to run this if we don't have the file with saved values
 # subscoreMean = []
@@ -762,23 +702,6 @@ def normCarVector_to_car(normalizedCarVector):
 #     plt.hist((np.array(s[:,i]) - subscoreMean[i])/subscoreSd[i])
 #     plt.show()
 
-
-# In[ ]:
-
-
 #subscoreStatsDF = pd.read_csv(kaboomDir +"/SAE/subscoreStatsDF.csv")
 #subscoreMean = list(subscoreStatsDF.subscoreMean)
 #subscoreSd = list(subscoreStatsDF.subscoreSD)
-
-
-
-
-car = startCarParams()
-v = asVector(car)
-
-
-# In[1026]:
-
-#
-#get_ipython().run_line_magic('timeit', 'asCarParameters(v)')
-#get_ipython().run_line_magic('timeit', 'asVector(car)')

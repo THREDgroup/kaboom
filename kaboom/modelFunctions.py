@@ -10,6 +10,7 @@ sub-teams; plotting results; and implementing biases for memory weights.
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy.stats import chi
+
 from kaboom import helperFunctions as h
 
 def pickWorseScore(betterScore,worseScore,temperature):

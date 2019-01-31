@@ -10,8 +10,8 @@ from kaboom import modelFunctions as m
 from kaboom.params import Params
 from kaboom.kaboom import saveResults
 from kaboom.carMakers import carTeamWorkProcess
-
 #
+##
 #def showResults(allTeamObjects, pComms,p):
 #
 #    allScores = np.array([t.getBestScore() for t in allTeamObjects])*-1
@@ -42,11 +42,11 @@ from kaboom.carMakers import carTeamWorkProcess
 #    plt.ylabel('performance')
 ##    plt.savefig('./pcomm.pdf')
 #    plt.show()
-#
-#    #alternatively, plot performance vs the actual number of pairwise interactions
-##    plt.scatter(nMeetings, perf)
-##    plt.savefig('./pcomm.pdf')
-#
+
+    #alternatively, plot performance vs the actual number of pairwise interactions
+#    plt.scatter(nMeetings, perf)
+#    plt.savefig('./pcomm.pdf')
+
 
 # # A 1.1
 # Test team performance of a homogeneous mid-range team

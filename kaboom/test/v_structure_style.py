@@ -1,4 +1,14 @@
-# # Specialization/Structure vs Style C3
+"""
+Run study of how specialization affects performance for different compositions.
+
+This script recreates the results shown in Figure 13 of [1]. It compares the
+optimal number of specialized teams for a specific problem and three different
+homogeneous team compositions: adaptive, mid-range, and innovative KAI styles.
+
+
+[1] Lapp, S., Jablokow, J., McComb, C. (2019). "KABOOM: An Agent-Based Model for Simulating Cognitive Style in Team Problem Solving". Unpulished manuscript.
+"""
+
 import numpy as np
 import time as timer
 import multiprocessing
@@ -15,39 +25,36 @@ from kaboom import modelFunctions as m
 #import helperFunctions as h
 from kaboom.kaboom import teamWorkProcess
 
-
-# In[52]: 
-
-def run():  
+def run():
     #Strategy 4: Homogenous teams of 3 styles
     t0 = timer.time()
     p=Params()
-    
+
     # teamSizes =[32]
     p.nAgents = 32
     nAgentsPerTeam = [32,16,8,4,3,2,1]
     # nTeams = [1,2,4,8,16,32]
     p.nDims = 32
     #p.reps=1
-    
+
     # choose one Team allocation strategy
     p.aiRange = 0#0
     aiScores = [55,95,135]#140# 300
-    
+
     #choose one problem (middle, favors mid-range)
     roughnesses = np.logspace(-1,.7,num=6,base=10)
     speeds = np.logspace(-1,.7,num=6,base=10) / 100
-    p.amplitude = roughnesses[3] 
-    p.AVG_SPEED = speeds[3] 
-    
-    
+    p.amplitude = roughnesses[3]
+    p.AVG_SPEED = speeds[3]
+
+
     resultMatrixH3 = []
     teamObjectsH3 = []
     for aiScore in aiScores:
         p.aiScore = aiScore
         scoresA = []
         teams = []
-        for subteamSize in nAgentsPerTeam: 
+        for subteamSize in nAgentsPerTeam:
             p.nTeams = int(p.nAgents/subteamSize)
             p.agentTeams = m.specializedTeams(p.nAgents,p.nTeams)
             p.teamDims = m.teamDimensions(p.nDims,p.nTeams)
@@ -62,10 +69,10 @@ def run():
         teamObjectsH3.append(teams)
         print("completed one")
     print("time to complete: "+str(timer.time()-t0))
-    
+
     # In[ ]:
-    
-    
+
+
     #plot score vs structure for different team sizes
     for i in range(len(aiScores)):
         nAgents = [len(team.agents) for teamSet in teamObjectsH3[i] for team in teamSet]
