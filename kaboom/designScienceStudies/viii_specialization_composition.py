@@ -1,10 +1,3 @@
-"""
-Run a study of team specialization vs performance for different compositions.
-
-This script recreates the results shown in Figure X of [1]. It demonstrates ....
-
-[1] Lapp, S., Jablokow, J., McComb, C. (2019). "KABOOM: An Agent-Based Model for Simulating Cognitive Style in Team Problem Solving". Unpulished manuscript.
-"""
 import numpy as np
 import time as timer
 import multiprocessing
