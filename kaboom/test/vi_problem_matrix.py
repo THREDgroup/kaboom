@@ -45,7 +45,7 @@ def run():
             teams = []
             for aiScore in aiScores:
                 p.aiScore = aiScore
-                if __name__ == '__main__' or 'kaboom.test.vi_problem_matrix':
+                if __name__ == '__main__' or 'kaboom.designScienceStudies.vi_problem_matrix':
                     pool = multiprocessing.Pool(processes = 4)
                     allTeams = pool.starmap(teamWorkProcess, zip(range(p.reps),itertools.repeat(p)))
                     scoresForAI.append([t.getBestScore() for t in allTeams])

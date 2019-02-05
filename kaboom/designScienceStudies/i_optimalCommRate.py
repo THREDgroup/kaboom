@@ -48,7 +48,7 @@ def run():
 
     allTeamObjects = []
     for pComm in pComms:
-        if __name__ == '__main__' or 'kaboom.test.i_optimalCommRate':
+        if __name__ == '__main__' or 'kaboom.designScienceStudies.i_optimalCommRate':
             pool = multiprocessing.Pool(processes = 4)
             allTeams = pool.starmap(teamWorkProcess, zip(range(p.reps),itertools.repeat(p)))
             print('next. time: '+str(timer.time()-t0))
@@ -72,6 +72,7 @@ def run():
     nS = [t.nMeetings for t in allTeamObjects]
     plt.scatter(nS,allScores, c=[.9,.9,.9])
     pC = [pc for pc in pComms for i in range(p.reps)]
+    plt.savefig("./results/i_optimalCommRate.pdf")
     plt.show()
     plt.scatter(pC,allScores, c=[.9,.9,.9])
     c = m.plotCategoricalMeans(pC,allScores)
@@ -99,4 +100,4 @@ def run():
 
     #alternatively, plot performance vs the actual number of pairwise interactions
     plt.scatter(nMeetings, perf)
-    #plt.savefig(domain+'/vsNmeetings.pdf')
+#    plt.savefig('./results/vsNmeetings.pdf')

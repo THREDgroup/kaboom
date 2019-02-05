@@ -56,7 +56,7 @@ def run():
         allTeamObjects = []
         for pComm in pComms:
             p.pComm = pComm
-            if __name__ == '__main__' or'kaboom.test.ix_composition_structure':
+            if __name__ == '__main__' or'kaboom.designScienceStudies.ix_composition_structure':
                 pool = multiprocessing.Pool(processes = 4)
                 allTeams = pool.starmap(teamWorkProcess, zip(range(p.reps),itertools.repeat(p)))
                 print('next. time: '+str(timer.time()-t0))

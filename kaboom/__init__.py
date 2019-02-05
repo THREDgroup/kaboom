@@ -1,1 +1,1 @@
-from kaboom import test 
+from kaboom import designScienceStudies 

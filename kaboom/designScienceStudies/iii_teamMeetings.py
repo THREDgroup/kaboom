@@ -42,7 +42,7 @@ def run():
     for meetingTimes in varyMeetingTimes:
         p.meetingTimes=meetingTimes
         print("meeting interval: "+str(meetingTimes))
-        if __name__ == '__main__' or 'kaboom.test.iii_teamMeetings':
+        if __name__ == '__main__' or 'kaboom.designScienceStudies.iii_teamMeetings':
             pool = multiprocessing.Pool(processes = 4)
             allTeams = pool.starmap(teamWorkProcess,
                     zip(range(p.reps),itertools.repeat(p)))

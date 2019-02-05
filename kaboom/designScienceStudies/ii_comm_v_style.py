@@ -46,7 +46,7 @@ def run():
         p.aiScore = aiScore
         allTeamObjects = []
         for pComm in pComms:
-            if __name__ == '__main__' or 'kaboom.test.ii_comm_v_style':
+            if __name__ == '__main__' or 'kaboom.designScienceStudies.ii_comm_v_style':
                 pool = multiprocessing.Pool(processes = 4)
                 allTeams = pool.starmap(teamWorkProcess, zip(range(p.reps),itertools.repeat(p)))
                 print('next. time: '+str(timer.time()-t0))

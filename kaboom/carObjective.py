@@ -60,7 +60,7 @@ tiresDF = pd.read_csv(kaboomDir +"/SAE/tires.csv")
 # motorsDF.Power = [int(1 + np.random.uniform(0.98,1.02)*motorsDF.iloc[i]['Power']) for i in range(len(motorsDF))]
 # motorsDF.to_csv("/Users/samlapp/Documents/THRED Lab/SAE/motorsTweaked.csv")
 enginesDF = pd.read_csv(kaboomDir +"/SAE/motorsTweaked.csv")
-print("unique" if len(enginesDF)-len(np.unique(enginesDF.Power)) == 0 else "not uniuqe")
+#print("unique" if len(enginesDF)-len(np.unique(enginesDF.Power)) == 0 else "not uniuqe")
 enginesDF.columns = ["ind","id","name","le","we","he","me","Phi_e","T_e"]
 enginesDF.at[0,'T_e'] = 12.4
 enginesDF.head()
@@ -70,7 +70,7 @@ enginesDF.head()
 # susDF.kfsp = susDF.krsp
 # susDF.to_csv("/Users/samlapp/Documents/THRED Lab/SAE/suspensionTweaked.csv")
 susDF = pd.read_csv(kaboomDir +"/SAE/suspensionTweaked.csv")
-print("unique" if len(susDF)-len(np.unique(susDF.krsp)) == 0 else "not uniuqe")
+#print("unique" if len(susDF)-len(np.unique(susDF.krsp)) == 0 else "not uniuqe")
 susDF = susDF.drop(columns=[susDF.columns[0]])
 susDF.head()
 
@@ -79,7 +79,7 @@ susDF.head()
 # brakesDF.rbrk = [np.random.uniform(0.98,1.02)*brakesDF.iloc[i]['rbrk'] for i in range(len(brakesDF))]
 # brakesDF.to_csv("/Users/samlapp/Documents/THRED Lab/SAE/brakesTweaked.csv")
 brakesDF = pd.read_csv(kaboomDir +"/SAE/brakesTweaked.csv")
-print("unique" if len(brakesDF)-len(np.unique(brakesDF['rbrk'])) == 0 else "not uniuqe")
+#print("unique" if len(brakesDF)-len(np.unique(brakesDF['rbrk'])) == 0 else "not uniuqe")
 brakesDF = brakesDF.drop(columns=[brakesDF.columns[0]])
 brakesDF.head()
 
@@ -330,9 +330,7 @@ weightsNull = np.ones(len(subObjectives)) / len(subObjectives)
 weights1 = np.array([14,1,20,30,10,1,1,10,10,2,1])/100
 weights2 = np.array([25,1,15,20,15,1,1,15,5,1,1])/100
 weights3 = np.array([14,1,20,15,25,1,1,10,10,2,1])/100
-
-#pitch moment is zero bc incorrect eqn
-weightsCustom = np.array([14,1,20,30,11,1,1,10,10,2,0])/100
+#weightsCustom = np.array([14,1,20,30,11,1,1,10,10,2,0])/100
 
 def objectiveDetailedNonNormalized(car,weights):
     score = 0
@@ -636,15 +634,12 @@ scalingVector = asVector(maxVals) #this acts as a scaling vector to map SI unit
 
 carVmin = asCarParameters([-1E10 for i in range(len(carParamsDF))])
 minVals = constrain(carVmin)
-# scalingVector1 = asVector(maxVals) #this acts as a scaling vector to map SI unit values to ~unit cube
-# carParamsDF.iloc[11]
-n = range(len(asVector(minVals)))
-plt.plot(n,asVector(maxVals)/scalingVector)
-plt.plot(n,asVector(minVals)/scalingVector)
+
+#plot the scaling vector:
+#n = range(len(asVector(minVals)))
+#plt.plot(n,asVector(maxVals)/scalingVector)
+#plt.plot(n,asVector(minVals)/scalingVector)
 # plt.plot(n,asVector(maxVals)/scalingVector)
-
-
-# In[1047]:
 
 
 mins = asVector(minVals)/scalingVector

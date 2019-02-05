@@ -90,3 +90,19 @@ class CarDesigner(Agent):
         carConstrained = carObjective.constrain(self.car)
         rConstrained = carObjective.normalizedCarVector(carConstrained)
         return rConstrained #[-1 for i in range(len(x))]
+
+
+class CarDesignerWeighted(CarDesigner):
+    """ Same class as Car Designer, but using weighted sub-objectives"""
+    def __init__(self,p):
+        CarDesigner.__init__(self,p)
+        self.obj_weights = np.array([25,1,15,20,15,1,1,15,5,1,1])/100 #weights2
+        
+
+    def f(self): #evaluate objective function for this agent's current solution
+        self.car = carObjective.normCarVector_to_car(self.r)
+        return carObjective.objective(self.car,weights=self.obj_weights)
+    def fr(self,new_r):
+        newCar = carObjective.normCarVector_to_car(new_r)
+        return carObjective.objective(newCar,weights=self.obj_weights)
+

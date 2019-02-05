@@ -21,14 +21,15 @@ pip install .
 ```
 
 ## Running Example Studies
+Run in your favorite python compiler
 
 ```python
 import kaboom
 
 # runs the first study, which analyzes performance
 # for different communication rates
-kaboom.test.i_optimalCommRate.run()
-
+kaboom.designScienceStudies.i_optimalCommRate.run()
+# output figure is saved to ./results/ directory
 ```
 
 ## Usage

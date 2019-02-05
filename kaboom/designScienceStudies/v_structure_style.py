@@ -58,7 +58,7 @@ def run():
             p.nTeams = int(p.nAgents/subteamSize)
             p.agentTeams = m.specializedTeams(p.nAgents,p.nTeams)
             p.teamDims = m.teamDimensions(p.nDims,p.nTeams)
-            if __name__ == '__main__' or 'kaboom.test.v_structure_style':
+            if __name__ == '__main__' or 'kaboom.designScienceStudies.v_structure_style':
                 pool = multiprocessing.Pool(processes = 4)
                 allTeams = pool.starmap(teamWorkProcess, zip(range(p.reps),itertools.repeat(p)))
                 scoresA.append([t.getBestScore() for t in allTeams])
