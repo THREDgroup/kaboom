@@ -15,6 +15,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 #parameters for KABOOM
 #import kaboom
@@ -94,4 +95,5 @@ def run():
     #rFile = './results/C_3homog/'+'scoreMatrix_homo_3styles_32.obj'
     #rPickle = open(rFile, 'wb')
     #pickle.dump(scoreMatrix, rPickle)
-    plt.savefig("./results/v_structure_3styles.pdf")
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/v_structure_3styles.pdf")

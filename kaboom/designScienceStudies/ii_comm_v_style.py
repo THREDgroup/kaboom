@@ -13,6 +13,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 from kaboom.params import Params
 from kaboom import modelFunctions as m
@@ -79,5 +80,6 @@ def run():
     plt.legend(aiScores)
     plt.xlabel('prob of communication (c)')
     plt.ylabel('performance')
-    plt.savefig("./results/ii_commRate_vStyle32_plot.pdf")
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/ii_commRate_vStyle32_plot.pdf")
     # plt.savefig("./results/A1.5_commRate_vStyle_plot.png",dpi=300)

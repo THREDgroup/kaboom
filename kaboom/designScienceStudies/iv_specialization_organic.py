@@ -14,6 +14,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 from kaboom.params import Params
 from kaboom import modelFunctions as m
@@ -83,4 +84,5 @@ def run():
     # rFile = './results/C1.1_organicSpecialization/'+'scoreMatrix.obj'
     # rPickle = open(rFile, 'wb')
     # pickle.dump(scoreMatrix, rPickle)
-    plt.savefig("./results/iv_specialization_organicTeams.pdf")
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/iv_specialization_organicTeams.pdf")

@@ -12,6 +12,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 from kaboom.params import Params
 from kaboom.kaboom import teamWorkProcess
@@ -134,7 +135,8 @@ def run():
     plt.ylabel('decreasing amplitude of objective function sinusoid')
 
     plt.colorbar()
-    plt.savefig('./results/vi_matrixOfProblems_bestStyle.pdf')
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/vi_matrixOfProblems_bestStyle.pdf")
 
 
 #save results:

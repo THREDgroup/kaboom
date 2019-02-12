@@ -4,6 +4,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 #parameters for KABOOM
 #import kaboom
@@ -79,5 +80,7 @@ def run():
     plt.ylabel("performance")
     #     plt.show()
     plt.legend(['homogeneous','heterogeneous70','organic'])
+
     plt.title("composition vs structure")
-    plt.savefig('./results/viii_structure_composition.pdf')
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/viii_structure_composition.pdf")

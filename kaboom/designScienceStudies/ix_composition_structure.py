@@ -4,6 +4,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 #parameters for KABOOM
 #import kaboom
@@ -83,4 +84,5 @@ def run():
     #    name="A1.6_commRate_vStyle_"+comps[i]
     #     directory = saveResults(allTeamObjects,name)
     plt.legend(comps)
-    plt.savefig("./results/ix_composition_specialization.pdf")
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/ix_composition_specialization.pdf")

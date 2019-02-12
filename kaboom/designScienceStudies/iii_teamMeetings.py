@@ -16,6 +16,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 from kaboom import modelFunctions as m
 from kaboom.params import Params
@@ -70,4 +71,5 @@ def run():
                                                 nMeetings,teamScores)
     x = np.linspace(0,10,10)
     plt.plot(x,(x*slope+intercept)*-1)
-    plt.savefig("./results/iii_team_meetings_"+str(timer.time())+".pdf")
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/iii_team_meetings_"+str(timer.time())+".pdf")

@@ -4,6 +4,7 @@ import multiprocessing
 from matplotlib import pyplot as plt
 #import pickle
 import itertools
+import os
 
 from kaboom.params import Params
 from kaboom import modelFunctions as m
@@ -20,13 +21,8 @@ def run():
     p.nDims = 20
     p.agentTeams = m.specializedTeams(p.nAgents,p.nTeams)
     p.teamDims = m.teamDimensions(p.nDims,p.nTeams) #np.ones([nTeams,nDims])
-
     pComms = np.linspace(0,1,11)
-
     p.aiScore = 95
-    #meetingTimes = 100
-    t0 = timer.time()
-
 
     t0 = timer.time()
     p=Params()
@@ -73,4 +69,5 @@ def run():
         pC = [pc for pc in pComms[0:-1] for i in range(p.reps)]
         m.plotCategoricalMeans(pC,allScores)
     plt.legend(['flat team of 16','2 subteams of 8','4 subteams of 4','8 subteams of 8','16 subteams of 1'])
-    plt.savefig('./results/x_communication_structure.pdf')
+    myPath = os.path.dirname(__file__)
+    plt.savefig(myPath+"/results/x_communication_structure.pdf")
