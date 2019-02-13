@@ -105,11 +105,12 @@ p=Params()
 p.nAgents = 33
 p.nDims = 56
 p.steps = 100 #100
-p.reps = 4#16
+p.reps = 16
 
 
 myPath = os.path.dirname(__file__)
-paramsDF = pd.read_csv("../SAE/paramDBreduced.csv")
+parentDir = os.path.dirname(myPath)
+paramsDF = pd.read_csv(parentDir+"/SAE/paramDBreduced.csv")
 paramsDF = paramsDF.drop(["used"],axis=1)
 paramsDF.head()
 
@@ -124,7 +125,7 @@ p.agentTeams = m.specializedTeams(p.nAgents,p.nTeams)
 p.teamDims = teamDimensions_semantic
    
 
-aiScores = [45,135]
+aiScores = [45]#,70,120,145]
 #ts = []
 #for k in aiScores:
 #    ts.append(teamWorkCustomTeams(0,p,0,k))
@@ -137,7 +138,7 @@ for teamNo in range(len(teams)):
     for aiScore in aiScores:
         teamObjects = []
         if __name__ == '__main__':# or 'kaboom.test.viii_specialization_composition':
-            pool = multiprocessing.Pool(processes = 4)
+            pool = multiprocessing.Pool(processes = 16)
             allTeams = pool.starmap(teamWorkCustomTeams, 
                                     zip(range(p.reps),
                                     itertools.repeat(p),

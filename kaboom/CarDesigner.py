@@ -5,13 +5,13 @@ import numpy as np
 
 from kaboom import carObjective
 from kaboom.agent import Agent
-from kaboom.params import Params
+#from kaboom.params import Params
 from kaboom.solution import Solution
-from kaboom.kaboom import teamWorkSharing
+#from kaboom.kaboom import teamWorkSharing
 from kaboom import kaiStyle as kai
 
 
-from kaboom import modelFunctions as m
+#from kaboom import modelFunctions as m
 
 class CarDesigner(Agent):
     """
