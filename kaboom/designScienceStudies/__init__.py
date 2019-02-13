@@ -7,4 +7,5 @@ import kaboom.designScienceStudies.v_structure_style
 import kaboom.designScienceStudies.vi_problem_matrix
 import kaboom.designScienceStudies.vii_diverseTeams_problemSets
 import kaboom.designScienceStudies.viii_specialization_composition
+import kaboom.designScienceStudies.ix_composition_structure
 import kaboom.designScienceStudies.x_specialization_communication

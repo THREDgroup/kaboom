@@ -1,0 +1,5 @@
+#plotting results
+
+import pickle
+f = open('/Users/samlapp/SAE_ABM/serverResults/1548796149.5020783nShares_long_smallTeam/results.obj', 'rb')
+results = pickle.load(f)

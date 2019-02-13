@@ -149,9 +149,10 @@ def calculateAgentDecay(agent, steps):
     ratio = calculateDecay(steps,T0,TF)
     return ratio
 
-#
-#
-def findAiScore(kai,kaiPopulation):
+
+#our virtual population of KAI scores
+kaiPopulation = makeKAI(100000)
+def findAiScore(kai,kaiPopulation=kaiPopulation):
     """
     Locate a requested KAI score from the virtual population.
 

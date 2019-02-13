@@ -38,7 +38,13 @@ def pickWorseScore(betterScore,worseScore,temperature):
     """
     if temperature <=1E-6: #at low temp: never pick worse answers (avoid /0 )
         return False
-    if np.random.uniform(0,1) < np.exp((betterScore-worseScore)/temperature):  #
+    relativeQuality = np.exp((betterScore-worseScore)/temperature)
+#    print(betterScore)
+#    print(worseScore)
+#    print(temperature)
+    if relativeQuality >= 1:
+        return True #avoid errors with inf value
+    if np.random.uniform(0,1) < relativeQuality:  #
         return True
     return False
 

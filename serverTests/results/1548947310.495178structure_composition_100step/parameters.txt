@@ -1,0 +1,16 @@
+steps: 2 
+self-bias: 0 
+num agents: 32 
+num teams: 1 
+num dimensions: 56 
+rg strength: 2 
+so strength: 2 
+repeats: 2 
+avg speed: 0.007 
+sd speed: 0.0007 
+min speed: 0.0001 
+avg temp: 1 
+sd temp: 0.5 
+roughness: 0.025 
+ai score: None 
+
