@@ -1,5 +1,5 @@
 """
-Inherits the Agent class, and creates agents that design a racecar.
+Inherits the Agent class, and creates agents that design an I-beam.
 """
 import numpy as np
 from matplotlib import pyplot as plt
@@ -9,7 +9,7 @@ from kaboom.helperFunctions import bounds
 from kaboom.agent import Agent
 from kaboom.params import Params
 from kaboom.solution import Solution
-from kaboom.kaboom import teamWorkSharing
+#from kaboom.kaboom import teamWorkSharing
 from kaboom import kaiStyle as kai
 
 
@@ -27,9 +27,9 @@ class Beam: #a symmetrical wide-flange beam
         self.Emodulus = 200E9
         
     def calcMaxStress(self,load = 50000):
-        momentOfInertia = 1/12 * (self.width * (self.outerHeight**3 - 
-                                                self.innerHeight**3) + 
-                                 self.thickness*self.innerHeight**3)
+        momentOfInertia = 1/12 * (self.width * 
+                                  (self.outerHeight**3 - self.innerHeight**3) 
+                                  + self.thickness*self.innerHeight**3) 
         extremeDistance = self.outerHeight / 2
         maxS = abs(load*self.length / 4 * extremeDistance / momentOfInertia)
         return maxS
@@ -57,8 +57,8 @@ class Beam: #a symmetrical wide-flange beam
 
         self.outerHeight = bounds(self.outerHeight, minDim, maxDim)
         self.width = bounds(self.width, minDim, maxDim)
-        if (self.outerHeight-self.innerHeight) < minDim:
-            self.innerHeight = self.outerHeight - minDim
+        if (self.outerHeight-self.innerHeight) < (2*minDim):
+            self.innerHeight = self.outerHeight - minDim*2
             
     def draw(self):
         fig,ax = plt.subplots(1)

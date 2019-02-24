@@ -57,6 +57,12 @@ def createCustomTeam(p,
 
     return myTeam
 
+#    
+#    agentsList = myTeam.agents
+#    agentStyles = [a.kai.KAI for a in agentsList]
+#    agentsSortedByStyle = [a for _,a in sorted(zip(agentStyles,agentsList))]
+#    subteamsSortedByStyle = 
+
 #Define a custom experiment for this one
 def teamWorkCustomTeams(processID,p,teamNo,kaiScore):
     """
@@ -201,3 +207,10 @@ for i in range(len(teams)):
     plt.scatter([i for j in range(1)],team0Ascores,color='b')
     plt.scatter([i for j in range(1)],team0Iscores,color='r')
     
+    
+    
+box=plt.boxplot([np.array(allHomogeneousScores)*-1, np.array(controlScores)*-1, np.array(superTeamScores)*-1],labels= ["homogeneous","organic","superteam"],showfliers=True)
+plt.xticks()
+h.pScore(allHomogeneousScores,superTeamScores)
+effectSize(allHomogeneousScores,superTeamScores)
+plt.savefig("/Users/samlapp/SAE_ABM/figs/carSuperteamsPerformance_wOutliers.pdf")

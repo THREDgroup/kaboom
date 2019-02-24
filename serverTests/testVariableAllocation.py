@@ -111,3 +111,43 @@ for i in range(len(rSemantic[0])):
 y = np.transpose([semanticScores, blindScores])
 x = [ [rSemantic[i], rBlind[i]] for i in range(len(rSemantic))]
 np.shape(x)
+
+
+
+#%%
+#reload:
+import pickle
+from kaboom import helperFunctions as h
+#
+#controlScores2 = [-55292.29509206555,
+# -45338.300883954755,
+# -53184.73998676013,
+# -50754.902868923025,
+# -50820.75571270982,
+# -52499.055766708996,
+# -23435.85869882632,
+# -54044.89854262271,
+# -54410.256796305584,
+# -54695.20895264576,
+# -53829.31089212713,
+# -54858.34490389723,
+# -53605.68770101951,
+# -51660.621739086935,
+# -46753.169327541465,
+# -49225.523958557904] 
+f = open('/Users/samlapp/SAE_ABM/kaboom/serverTests/results/1549986308.271808allocation_blind/results.obj', 'rb')
+blindT = pickle.load(f)
+f = open('/Users/samlapp/SAE_ABM/kaboom/serverTests/results/1549985535.329531allocation_semantic/results.obj','rb')
+semanticT = pickle.load(f)
+blindS = [t.bestScore for t in blindT]
+semanticS = [t.bestScore for t in semanticT]
+pScore = h.pScore(blindS,semanticS)
+print(pScore)
+print(effectSize(blindS,semanticS))
+
+plt.scatter([1 for s in semanticS],semanticS)
+plt.scatter([0 for s in blindS],blindS)
+#plt.scatter([-1 for s in controlScores],controlScores)
+plt.legend(['semantic','blind'])#,'control'])
+print(np.mean(semanticScores))
+print(np.mean(blindScores))

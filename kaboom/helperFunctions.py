@@ -63,3 +63,10 @@ def aiColor(ai):
     red = ai01
     blue = 1 - ai01
     return (red,0,blue)
+
+def effectSize(a,b):
+    delta = np.mean(a)-np.mean(b)
+    sd_pooled_num = (len(a)-1)*(np.std(a)**2)+ (len(b)-1)*(np.std(b)**2)
+    sd_pooled_denom = len(a)+len(b)-2
+    sd_pooled = np.sqrt(sd_pooled_num/sd_pooled_denom)
+    return delta/sd_pooled

@@ -22,8 +22,9 @@ p=Params()
 p.nAgents = 33
 p.nDims = 56
 p.steps = 100
-p.reps = 4#8 #16
-#
+p.reps = 16
+
+
 #nAgentsPerTeam = [1,2,3,4,8,16,32]#[32,16]# [8,4,3,2,1] 
 
 paramsDF = pd.read_csv("../kaboom/SAE/paramDBreduced.csv")
@@ -48,7 +49,8 @@ p.teamDims = teamDimensions_semantic
 ##request: 800 sec * 7*3 = 4.7 hours -> request 6 hrs
 
 styleTeams = []
-aiScores = [45,75,115,135]
+flatTeamObjects = []
+aiScores = np.linspace(45,145,9)
 for aiScore in aiScores:
     p.aiScore = aiScore
     p.aiRange = 0
@@ -60,33 +62,66 @@ for aiScore in aiScores:
     #            teams.append(allTeams)
         for t in allTeams:
             teamObjects.append(t)
+            flatTeamObjects.append(t)
         pool.close()
         pool.join()
     print("time to complete: "+str(timer.time()-t0))
     styleTeams.append(teamObjects)
-
-for i,style in enumerate(styleTeams):
-    kaiScore = aiScores[i]
-    scores = [t.getBestScore() for t in style]
-    ai = [kaiScore for i in range(p.reps)]
-    plt.scatter(ai,scores)
     
-plt.scatter(np.ones(16)*95,[-43697.83046474878,
- -53539.600755698295,
- -51475.71127076317,
- -42580.22982036467,
- -55799.1550135683,
- -48337.7879095872,
- -53567.45303120078,
- -45038.94097887598,
- -54929.55670206938,
- -45854.197285548806,
- -53866.196861206874,
- -56265.54094660408,
- -55839.239946908034,
- -50304.24237876096,
- -46157.816942948375,
- -41412.904269363855], c='purple')
+saveResults(flatTeamObjects, p, "carsKaiStyle")
+
+
+allScores = [t.getBestScore()*-1 for s in styleTeams for t in s]
+allScoresGrouped = [[t.getBestScore()*-1 for t in s] for s in styleTeams]
+
+superTeamScores = np.array([-46461.027450347676,
+ -54519.676205915675,
+ -52740.81354906518,
+ -58769.53119480033,
+ -54393.41597929167,
+ -56644.15184100017,
+ -51969.893963338036,
+ -57028.36142510394,
+ -59086.515442166754,
+ -56617.530503163645,
+ -55923.171807895764,
+ -51438.02773070671,
+ -57004.68240556857,
+ -53604.21190104142,
+ -58087.478110760756,
+ -56914.52937878722])*-1
+
+#for i,style in enumerate(styleTeams):
+#    kaiScore = aiScores[i]
+#    scores = [t.getBestScore() for t in style]
+#    ai = [kaiScore for i in range(p.reps)]
+#    plt.scatter(ai,scores,c=[0.9,0.9,0.9])
+    
+allkai = [kai for kai in aiScores for i in range(p.reps)]
+m.plotCategoricalMeans(allkai,allScores)
+plt.scatter(allkai,allScores,c=[0.9,0.9,0.9])
+qFit = np.polyfit(allkai,allScores,2)
+q = np.poly1d(qFit)
+x = np.linspace(45,145,100)
+plt.plot(x,q(x))
+plt.xticks([int(i) for i in aiScores])
+plt.savefig('/Users/samlapp/SAE_ABM/kaboom/serverTests/plots/styleForEntireTeam1.pdf')
+#plt.scatter(np.ones(16)*95,[-43697.83046474878,
+# -53539.600755698295,
+# -51475.71127076317,
+# -42580.22982036467,
+# -55799.1550135683,
+# -48337.7879095872,
+# -53567.45303120078,
+# -45038.94097887598,
+# -54929.55670206938,
+# -45854.197285548806,
+# -53866.196861206874,
+# -56265.54094660408,
+# -55839.239946908034,
+# -50304.24237876096,
+# -46157.816942948375,
+# -41412.904269363855], c='purple')
 
 #name="allocation_semantic"
 #directory = saveResults(teamObjectsSemantic,p,name)
