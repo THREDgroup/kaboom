@@ -42,9 +42,18 @@ def bounds(x,low,high):
     return x
 
 def pScore(A,B):
-    """ ANOVA of 2 independent samples: are differences significant? """
+    """RUN ANOVA of 2 independent samples and return p score"""
     _, p = scipy.stats.ttest_ind(A,B)
     return p
+
+def effectSize(a,b):
+    """calculate Cohen's d effect size for two independent samples a and b"""
+    delta = np.mean(a)-np.mean(b)
+    sd_pooled_num = (len(a)-1)*(np.std(a)**2)+ (len(b)-1)*(np.std(b)**2)
+    sd_pooled_denom = len(a)+len(b)-2
+    sd_pooled = np.sqrt(sd_pooled_num/sd_pooled_denom)
+    return delta/sd_pooled
+
 
 def dotNorm(a,b):
     """return normalized dot product (how parallel 2 vectors are, -1 to 1) """
@@ -64,9 +73,3 @@ def aiColor(ai):
     blue = 1 - ai01
     return (red,0,blue)
 
-def effectSize(a,b):
-    delta = np.mean(a)-np.mean(b)
-    sd_pooled_num = (len(a)-1)*(np.std(a)**2)+ (len(b)-1)*(np.std(b)**2)
-    sd_pooled_denom = len(a)+len(b)-2
-    sd_pooled = np.sqrt(sd_pooled_num/sd_pooled_denom)
-    return delta/sd_pooled

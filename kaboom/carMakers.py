@@ -7,6 +7,16 @@ from kaboom.params import Params
 from kaboom.CarDesigner import CarDesigner
 
 def carTeamWorkProcess(processID,p,agentConstructor = CarDesigner):
-    """A wrapper for teamWorkSharing used for multiprocessing"""
+    """A wrapper for teamWorkSharing used for multiprocessing
+    
+    parameters:
+    processID : int
+    p : Params object
+    agentConstructor : constructor for desired Agent class 
+        
+    returns:
+    team : Team object
+        
+    """
     team = teamWorkSharing(p,agentConstructor)
     return team

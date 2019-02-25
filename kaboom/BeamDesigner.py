@@ -164,23 +164,25 @@ class BeamDesigner(Agent):
         rConstrained = beam.normVector()
         return rConstrained #[-1 for i in range(len(x))]
 
-p = Params()
-p.nDims = 4
-p.groupConformityBias = False
-a = BeamDesigner(p)
-#a.kai = kai.findAiScore(130,
-a.score = a.f()
 
-print(a.r)
-print(a.score)
-for i in range(100):
-    a.move(p)
-    b=a.beam
-    if i%10== 0:
-        b.draw()
-print("final score:")
-print(a.r)
-print(a.score)
+#TEST
+#p = Params()
+#p.nDims = 4
+#p.groupConformityBias = False
+#a = BeamDesigner(p)
+##a.kai = kai.findAiScore(130,
+#a.score = a.f()
+#
+#print(a.r)
+#print(a.score)
+#for i in range(100):
+#    a.move(p)
+#    b=a.beam
+#    if i%10== 0:
+#        b.draw()
+#print("final score:")
+#print(a.r)
+#print(a.score)
 
 
 #            
