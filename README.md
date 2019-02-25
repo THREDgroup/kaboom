@@ -13,23 +13,28 @@ innovative (radical change).
 
 <!-- -->
 
-Download kaboom and navigate to the top level kaboom directory, then use the package manager [pip](https://pip.pypa.io/en/stable/) to install kaboom.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install kaboom from Github.
 
 ```bash
-cd kaboom
-pip install .
+pip install git+http://github.com/THREDgroup/kaboom.git
 ```
 
-## Running Example Studies
+## Running IDETC Studies
 Run in your favorite python compiler
 
 ```python
 import kaboom
 
-# runs the first study, which analyzes performance
-# for different communication rates
-kaboom.designScienceStudies.i_optimalCommRate.run()
-# output figure is saved to ./results/ directory
+# runs the first study, which analyzes the effect of a team's
+#cognitive style composition on performance for 2 problems
+kaboom.IDETC_studies.i_teamStyle.run()
+# output figure is saved to kaboom/kaboom/IDETC_studies/results/ directory
+
+#run the other experiments from IDETC paper:
+kaboom.IDETC_studies.ii_subteamStyle.run()
+kaboom.IDETC_studies.iii_strategicTeams.run()
+kaboom.IDETC_studies.iv_problemDecomposition.run()
+#results figures are saved to kaboom/kaboom/IDETC_studies/results/
 ```
 
 ## Usage
@@ -43,21 +48,47 @@ parameters = kaboom.params.Params()
 #modify simulation parameter values as desired
 parameters.nDims = 14
 
-#run the simulation
+#run the simulation with an abstract sinusoid objective function
 team = kaboom.kaboom.teamWorkSharing(parameters)
 
-#check the performance of the team (lower scores are better!)
-print( team.getBestScore() )
+#check team performance
+#invert score *-1 so that higher score = better performance
+print( team.getBestScore()*-1 )
 
 #check other outcomes, such as the number of pairwise interactions:
 print ( team.nMeetings )
 
 ```
+## Running a Car Design problem
+
+```python
+from kaboom.carMakers import runCarDesignProblem
+
+#create a parameters object
+#parameters (p.nAgents = 33, p.nTeams = 11, p.nDims = 56) are automatically set for this problem.
+parameters = kaboom.params.Params()
+
+#run the simulation with the car designer objective
+team = runCarDesignProblem(parameters)
+
+#check the performance of the team
+#invert score *-1 so that higher score = better performance
+print( team.getBestScore()*-1 )
+
+```
+
+## Running a Beam Design problem
+
+```python
+from kaboom.runBeamDesigners import runBeamDesignProblem
+team = runBeamDesignProblem() #run beam design simulation
+print( team.getBestScore()*-1 ) #performance: higher = better
+```
+
 
 ## Running Simulations in Parallel
 
 ```python
-
 #run simulations in parallel with multiprocessing
 import multiprocessing
 import itertools
@@ -82,7 +113,6 @@ print([t.getBestScore() for t in allTeamObjects])
 
 
 #now create your own experiment, varying a parameter and checking the performance
-
 ```
 
 <!--

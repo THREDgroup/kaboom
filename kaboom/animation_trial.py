@@ -1,30 +1,15 @@
 import numpy as np
 from matplotlib import pyplot as plt
-#from matplotlib import animation
-#import matplotlib.image as mpimg
 from kaboom import helperFunctions as h
 from kaboom import modelFunctions as m
 import itertools
 
-#import os
-#import subprocess
+import os
 
 from kaboom.params import Params
-#from kaboom.CarDesigner import CarDesigner
-#from kaboom.carObjective import normCarVector_to_car
 from kaboom import modelFunctions as m
 
 from kaboom.kaboom import teamWorkSharing
-#import matplotlib.patches as mpatches
-#from kaboom.carMakers import carTeamWorkProcess
-#from kaboom.CarDesigner import CarDesignerWeighted
-
-def effectSize(a,b):
-    delta = np.mean(a)-np.mean(b)
-    sd_pooled_num = (len(a)-1)*(np.std(a)**2)+ (len(b)-1)*(np.std(b)**2)
-    sd_pooled_denom = len(a)+len(b)-2
-    sd_pooled = np.sqrt(sd_pooled_num/sd_pooled_denom)
-    return delta/sd_pooled
 
 p= Params()
 p.nAgents = 8

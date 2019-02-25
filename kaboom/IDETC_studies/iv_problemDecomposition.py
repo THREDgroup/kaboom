@@ -1,3 +1,13 @@
+"""
+Run car design problem for semantic and blind problem decomposition
+
+This recreates the fourth experiment from IDETC , and demonstrates that a team
+can perform better if it uses a random allocation of variables to sub-teams
+rather than the semantic decomposition (engine variables together, cabin 
+variables together, etc).
+
+The results are plotted and saved to /results/ folder
+"""
 import numpy as np
 import time as timer
 import multiprocessing

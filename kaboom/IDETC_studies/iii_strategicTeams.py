@@ -1,4 +1,14 @@
-#saving the session workspace varibles to serverTests/individualTeamStyles
+"""
+Strategically assign agents to sub-teams based on their KAI styles
+
+This recreates the third experiment from IDETC, and demonstrates that a team
+can perform better if it assigns its agents to sub-teams based on their 
+cognitive style and the best style for each sub-team. The control group is 
+a team composed of random agents and assigned to random teams, and the 
+strategic teams are composed of random agents assigned to teams strategically.
+
+The results are plotted and saved to /results/ folder
+"""
 import numpy as np
 import time as timer
 import multiprocessing
@@ -126,9 +136,9 @@ def run(numberOfCores = 4):
     controlScores = [t.getBestScore()*-1 for t in controlTeams]
     
     
-    #RUN ORGANIC SUPERTEAM
+    #Run strategic teams
     subteamsSortedByStyle = [7, 8, 0, 10, 3, 2, 6, 4, 1, 5, 9]
-    namedSortedTeams = [teams[i] for i in subteamsSortedByStyle]
+#    namedSortedTeams = [teams[i] for i in subteamsSortedByStyle]
     
     
     strategicTeamObjects = []

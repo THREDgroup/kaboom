@@ -1,4 +1,16 @@
-#saving the session workspace varibles to serverTests/individualTeamStyles
+"""
+Compare the effect of style on performance for each sub-team of car problem
+
+This experiment addresses the question:
+Do certain sub-teams of the car problem favor a KAI style?
+
+WARNING: This could take a long time and a lot of computational power. 
+Consider running  on a server. Set numberOfCores to the number of parallel
+comupting nodes/cores available. The simulation can be run in parallel up to
+ p.reps times (= 16 by default)
+ 
+The results are plotted and saved to /results/subteam_plots folder
+"""
 import numpy as np
 import time as timer
 import multiprocessing
