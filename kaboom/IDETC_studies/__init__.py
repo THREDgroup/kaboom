@@ -2,3 +2,4 @@ import kaboom.IDETC_studies.i_teamStyle
 import kaboom.IDETC_studies.ii_subteamStyle
 import kaboom.IDETC_studies.iii_strategicTeams
 import kaboom.IDETC_studies.iv_problemDecomposition
+import kaboom.IDETC_studies.testKaboom
