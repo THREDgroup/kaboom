@@ -2,9 +2,9 @@
 Strategically assign agents to sub-teams based on their KAI styles
 
 This recreates the third experiment from IDETC, and demonstrates that a team
-can perform better if it assigns its agents to sub-teams based on their 
-cognitive style and the best style for each sub-team. The control group is 
-a team composed of random agents and assigned to random teams, and the 
+can perform better if it assigns its agents to sub-teams based on their
+cognitive style and the best style for each sub-team. The control group is
+a team composed of random agents and assigned to random teams, and the
 strategic teams are composed of random agents assigned to teams strategically.
 
 The results are plotted and saved to /results/ folder
@@ -46,7 +46,7 @@ def createOrganicSuperteam(p,subteamsSortedByStyle,
         a.team = newSubTeamAllocations[i]
 
     myTeam.agents = agentsSortedByStyle
-    
+
     for a in myTeam.agents:
         a.startSpeed = h.cp(a.speed)
         a.startTemp = h.cp(a.temp)
@@ -94,23 +94,23 @@ def teamWorkOrganicSuperteam(processID,p,subteamsSortedByStyle):
 def run(numberOfCores = 4):
     t0 = timer.time()
     p=Params()
-    
+
     #change team size and one sub-teams style:
     p.nAgents = 33
     p.nDims = 56
     p.steps = 100 #100
     p.reps = 16
-    
+
     #organic composition: select agents randomly from population
     p.aiScore = None
     p.aiRange = None
-      
+
     myPath = os.path.dirname(__file__)
     parentDir = os.path.dirname(myPath)
     paramsDF = pd.read_csv(parentDir+"/SAE/paramDBreduced.csv")
     paramsDF = paramsDF.drop(["used"],axis=1)
     paramsDF.head()
-    
+
     #assign the actual specialized teams:
     teams = ['brk', 'c', 'e', 'ft', 'fw', 'ia','fsp','rsp', 'rt', 'rw', 'sw']
     paramTeams = paramsDF.team
@@ -119,12 +119,12 @@ def run(numberOfCores = 4):
     #teamDimensions_blind = m.specializedTeams(p.nAgents,p.nTeams)
     p.agentTeams = m.specializedTeams(p.nAgents,p.nTeams)
     p.teamDims = teamDimensions_semantic
-       
-    
+
+
     #First run the control group: teams with organic composition
     if __name__ == '__main__'or 'kaboom.IDETC_studies.iii_strategicTeams':
         pool = multiprocessing.Pool(processes = numberOfCores)
-        controlTeams = pool.starmap(carTeamWorkProcess, 
+        controlTeams = pool.starmap(carTeamWorkProcess,
                                 zip(range(p.reps),
                                 itertools.repeat(p),
                                 itertools.repeat(CarDesignerWeighted)))
@@ -132,19 +132,19 @@ def run(numberOfCores = 4):
     #            teams.append(allTeams)
         pool.close()
         pool.join()
-        
+
     controlScores = [t.getBestScore()*-1 for t in controlTeams]
-    
-    
+
+
     #Run strategic teams
     subteamsSortedByStyle = [7, 8, 0, 10, 3, 2, 6, 4, 1, 5, 9]
 #    namedSortedTeams = [teams[i] for i in subteamsSortedByStyle]
-    
-    
+
+
     strategicTeamObjects = []
     if __name__ == '__main__' or 'kaboom.IDETC_studies.iii_strategicTeams':
         pool = multiprocessing.Pool(processes = 4)
-        allTeams = pool.starmap(teamWorkOrganicSuperteam, 
+        allTeams = pool.starmap(teamWorkOrganicSuperteam,
                                 zip(range(p.reps),
                                 itertools.repeat(p),
                                 itertools.repeat(subteamsSortedByStyle)))
@@ -155,16 +155,18 @@ def run(numberOfCores = 4):
         pool.close()
         pool.join()
     print("time to complete: "+str(timer.time()-t0))
-    
+
     strategicScores = [t.getBestScore()*-1 for t in strategicTeamObjects]
-    
+
     plt.boxplot([np.array(controlScores), np.array(strategicScores)],labels= ["control","strategic allocation"],showfliers=True)
     plt.ylabel("car design performance")
-    
+
     plt.savefig(myPath+"/results/iii_carStrategicTeamAssignment.pdf")
     plt.show()
-    plt.clf()    
-    
+    plt.clf()
+
+    print("Results figure saved to "+myPath+"/results/iii_carStrategicTeamAssignment.pdf")
+
     print("effect size:" )
     print(h.effectSize(controlScores,strategicScores))
     print("ANOVA p score: ")
