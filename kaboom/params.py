@@ -48,6 +48,7 @@ class Params():
         self.nTeams = 2
         self.teamDims = m.teamDimensions(self.nDims,self.nTeams)
         self.agentTeams = m.specializedTeams(self.nAgents,self.nTeams)
+        self.kaiList = None #if specified, creates a team with exactly this composition (eg [90,85,100])
 
         #default team has organic style composition
         self.curatedTeams = False #for Heterogeneous Linearly Distributed teams

@@ -172,7 +172,20 @@ def createTeam(p,agentConstructor = Steinway):
         a.myDims = p.teamDims[aTeam]
         a.decay = kai.calculateAgentDecay(a,p.steps)
 
-    if p.curatedTeams and p.aiRange is not None and p.aiScore is not None:
+    #adding an option to specify the exact list of KAI scores for a team (Sam 2020/02/11)
+    #to use this, add a list of KAI scores as an attribute called "kaiList" to the Parameters object p
+    #for example: p.kaiList = [70,80,80,101,84] 
+    #the list must have the same number of elements as there are agents on the team
+    #to explicitly NOT use this option, set p.kaiList = None (which is the default value)
+    if p.kaiList is not None:
+        if len(p.kaiList) != len(myTeam.agents):
+            raise ValueError(f'The length of Parameters.kaiList ({len(p.kaiList)}) does not match the number of agents on the team ({len(myTeam.agents)}).')
+        for i,a in enumerate(myTeam.agents):
+            a.kai = kai.findAiScore(p.kaiList[i])
+            a.speed = kai.calcAgentSpeed(a.kai.KAI,p)
+            a.temp = kai.calcAgentTemp(a.kai.E,p)
+            a.decay = kai.calculateAgentDecay(a,p.steps)
+    elif p.curatedTeams and p.aiRange is not None and p.aiScore is not None:
         for team in range(len(p.teamDims)):
             teamAgents=[a for a in myTeam.agents if a.team == team]
             if len(teamAgents)<2:
@@ -180,6 +193,7 @@ def createTeam(p,agentConstructor = Steinway):
                 a.kai = kai.findAiScore(p.aiScore,kaiPopulation)
                 a.speed = kai.calcAgentSpeed(a.kai.KAI,p)
                 a.temp = kai.calcAgentTemp(a.kai.E,p)
+                #should a.decay be recalculated here? I think it should... (Sam 2020/02/11)
             else:
                 for i in range(len(teamAgents)):
                     myKai = p.aiScore - p.aiRange/2.0 + p.aiRange*(float(i)/(len(teamAgents)-1))
@@ -187,6 +201,8 @@ def createTeam(p,agentConstructor = Steinway):
                     a.kai = kai.findAiScore(myKai,kaiPopulation)
                     a.speed = kai.calcAgentSpeed(a.kai.KAI,p)
                     a.temp = kai.calcAgentTemp(a.kai.E,p)
+                    #should a.decay be recalculated here? I think it should... (Sam 2020/02/11)
+
     for a in myTeam.agents:
         a.startSpeed = h.cp(a.speed)
         a.startTemp = h.cp(a.temp)

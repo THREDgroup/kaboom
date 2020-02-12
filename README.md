@@ -15,12 +15,23 @@ innovative (radical change).
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install kaboom from Github.
 
+KABOOM has been tested with python 3.6.7. We recommend creating a new Anaconda environment before installing KABOOM. The code below assumes you have [Anaconda](https://docs.anaconda.com/anaconda/install/).
+
 ```bash
-pip install git+http://github.com/THREDgroup/kaboom.git
+conda create -n kaboomEnvironment python=3.6
+source activate kaboomEnvironment
+conda install pip
+pip install git+http://github.com/THREDgroup/kaboom.git 
+```
+
+If you still have package issues, tell pip to install the specific versions of packages listed in kaboom/requirements.txt. In the example below, you'll need to replace "/path/to" in the command below with the path to requirements.txt on your computer. 
+
+```bash
+pip install -r /path/to/kaboom/requirements.txt #
 ```
 
 ## Running IDETC Studies
-Run in your favorite python compiler
+Run in your favorite python compiler:
 
 ```python
 import kaboom
@@ -38,6 +49,8 @@ kaboom.IDETC_studies.iv_problemDecomposition.run()
 ```
 
 ## Usage
+
+Run a basic simulation
 
 ```python
 import kaboom
@@ -59,6 +72,30 @@ print( team.getBestScore()*-1 )
 print ( team.nMeetings )
 
 ```
+
+## Customized KAI score composition
+
+Specify a set of KAI scores for agents on a team
+
+```python
+import kaboom
+
+#create a parameters object:
+parameters = kaboom.params.Params()
+
+#provide a list of KAI scores for each agent on the team
+parameters.nAgents = 5
+parameters.kaiList = [100,101,102,120,80]
+
+#run the simulation using this custom team composition
+team = kaboom.kaboom.teamWorkSharing(parameters)
+
+#check that the KAI scores of each team member match the desired values:
+print("KAI scores of each team member:")
+print([a.kai.KAI for a in team.agents])
+
+```
+
 ## Running a Car Design problem
 
 ```python
